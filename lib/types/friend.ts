@@ -1,6 +1,23 @@
-type Friend = {
+export type TimeOfDay = "morning" | "afternoon" | "evening" | "night";
+
+export type Friend = {
   id: string;
   name: string;
-  timezone: string; // e.g. "Asia/Brunei"
-  birthday?: string; // ISO date: "1998-04-12"
+  timezone: string;
+  birthday?: string;
+
+  // Computed/derived at runtime
+  localTime?: Date;
+  offsetHours?: number;
+  offsetLabel?: string;
+  offsetText?: string;
+  timeOfDay?: TimeOfDay;
+};
+
+export type FriendGrouped = {
+  [key in TimeOfDay]: Friend[];
+};
+
+export type FriendByRegion = {
+  [region: string]: Friend[];
 };
