@@ -69,9 +69,9 @@ const InfoCard = observer(({ friend }: { friend: Friend }) => {
         </div>
 
         {/* Right column */}
-        <div className="w-2/3 flex flex-col">
+        <div className="w-2/3 flex flex-col gap-1">
           <p>
-            {friend.name} is <br />
+            {friend.name} is{" "}
             <span className="font-semibold">{friend.offsetText}</span>
           </p>
           <p className="font-normal text-muted-foreground text-sm">

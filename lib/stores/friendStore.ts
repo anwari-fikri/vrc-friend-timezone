@@ -164,6 +164,23 @@ class FriendStore {
       });
   }
 
+  /** Enriched friends (always uses all stored friends) */
+  get enrichedAllFriends(): Friend[] {
+    return this.friends
+      .map((friend) => ({
+        ...friend,
+        localTime: getLocalTime(friend.timezone),
+        offsetHours: getOffsetHours(friend.timezone),
+        offsetLabel: getOffsetLabel(getOffsetHours(friend.timezone)),
+        offsetText: formatOffsetText(getOffsetHours(friend.timezone)),
+        timeOfDay: getTimeOfDay(getCurrentHour(friend.timezone)),
+      }))
+      .sort((a, b) => {
+        if (!a.localTime || !b.localTime) return 0;
+        return a.localTime.getTime() - b.localTime.getTime();
+      });
+  }
+
   /** Friends grouped by time of day */
   get friendsByTimeOfDay(): FriendGrouped {
     const groups: FriendGrouped = {

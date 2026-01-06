@@ -35,10 +35,10 @@ export const ManageFavoritesDialog = observer(function ManageFavoritesDialog() {
           </DialogDescription>
         </DialogHeader>
         <div className="space-y-2 max-h-96 overflow-y-auto">
-          {friendStore.enrichedFriends.length === 0 ? (
+          {friendStore.enrichedAllFriends.length === 0 ? (
             <p className="text-sm text-muted-foreground">No friends yet</p>
           ) : (
-            friendStore.enrichedFriends.map((friend) => (
+            friendStore.enrichedAllFriends.map((friend) => (
               <div
                 key={friend.id}
                 onClick={() => friendStore.toggleFavorite(friend.id)}
