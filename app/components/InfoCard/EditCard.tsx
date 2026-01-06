@@ -22,7 +22,7 @@ export function EditCard() {
         <DialogTrigger asChild>
           <EllipsisVertical className="w-4 cursor-pointer" />
         </DialogTrigger>
-        <DialogContent className="sm:max-w-[425px]">
+        <DialogContent className="sm:max-w-106.25">
           <DialogHeader>
             <DialogTitle>Edit Friend</DialogTitle>
             <DialogDescription>

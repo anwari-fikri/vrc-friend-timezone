@@ -24,7 +24,7 @@ export function AddCard() {
             Add Friend <PlusCircle />
           </Button>
         </DialogTrigger>
-        <DialogContent className="sm:max-w-[425px]">
+        <DialogContent className="sm:max-w-106.25">
           <DialogHeader>
             <DialogTitle>Add Friend</DialogTitle>
             <DialogDescription>
