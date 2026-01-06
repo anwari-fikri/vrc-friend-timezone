@@ -54,7 +54,7 @@ const InfoCard = observer(({ friend }: { friend: Friend }) => {
         <div className="w-1/3 flex flex-col">
           <p className="font-semibold text-muted-foreground text-normal">
             {friend.localTime?.toLocaleDateString("en-US", {
-              weekday: "long",
+              weekday: "short",
               month: "short",
               day: "numeric",
             })}

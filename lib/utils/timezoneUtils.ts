@@ -1,14 +1,19 @@
 export const getOffsetHours = (timezone: string): number => {
   const now = new Date();
-  const local = now.getTime();
+
+  const utc = new Date(
+    now.toLocaleString("en-US", { timeZone: "UTC" })
+  ).getTime();
+
   const remote = new Date(
     now.toLocaleString("en-US", { timeZone: timezone })
   ).getTime();
 
-  return Math.round((remote - local) / 36e5);
+  return Math.round((remote - utc) / 36e5);
 };
 
-export const getOffsetLabel = (offsetHours: number): string => {
+export const getOffsetLabel = (timezone: string): string => {
+  const offsetHours = getOffsetHours(timezone);
   return `UTC${offsetHours >= 0 ? "+" : ""}${offsetHours}`;
 };
 

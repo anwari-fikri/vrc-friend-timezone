@@ -154,7 +154,7 @@ class FriendStore {
         ...friend,
         localTime: getLocalTime(friend.timezone),
         offsetHours: getOffsetHours(friend.timezone),
-        offsetLabel: getOffsetLabel(getOffsetHours(friend.timezone)),
+        offsetLabel: getOffsetLabel(friend.timezone),
         offsetText: formatOffsetText(getOffsetHours(friend.timezone)),
         timeOfDay: getTimeOfDay(getCurrentHour(friend.timezone)),
       }))
@@ -171,7 +171,7 @@ class FriendStore {
         ...friend,
         localTime: getLocalTime(friend.timezone),
         offsetHours: getOffsetHours(friend.timezone),
-        offsetLabel: getOffsetLabel(getOffsetHours(friend.timezone)),
+        offsetLabel: getOffsetLabel(friend.timezone),
         offsetText: formatOffsetText(getOffsetHours(friend.timezone)),
         timeOfDay: getTimeOfDay(getCurrentHour(friend.timezone)),
       }))
