@@ -25,7 +25,6 @@ const allTimezones: ICustomTimezone = {
   "America/Los_Angeles": "Pacific Time",
   "Atlantic/Azores": "Azores",
   "Atlantic/Cape_Verde": "Cape Verde Islands",
-  GMT: "UTC",
   "Europe/London": "Edinburgh, London",
   "Europe/Dublin": "Dublin",
   "Europe/Lisbon": "Lisbon",

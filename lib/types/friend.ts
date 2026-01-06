@@ -5,6 +5,8 @@ export type Friend = {
   name: string;
   timezone: string;
   birthday?: string;
+  isFavorite?: boolean;
+  avatar?: string;
 
   // Computed/derived at runtime
   localTime?: Date;

@@ -72,74 +72,101 @@ const frameworks = Object.entries(allTimezones as ICustomTimezone)
 
 /* ------------------ component ------------------ */
 
-export function TimezoneSelector({ id }: { id?: string }) {
+export const TimezoneSelector = React.forwardRef<
+  HTMLInputElement,
+  { id?: string; value?: string; onChange?: (value: string) => void }
+>(function TimezoneSelector({ id, value: propValue, onChange }, ref) {
+  const [value, setValue] = React.useState(propValue || "");
   const [open, setOpen] = React.useState(false);
-  const [value, setValue] = React.useState("");
+
+  const handleValueChange = (newValue: string) => {
+    setValue(newValue);
+    onChange?.(newValue);
+  };
+  const internalRef = React.useRef<HTMLInputElement>(null);
+
+  React.useImperativeHandle(
+    ref,
+    () =>
+      ({
+        get value() {
+          return value;
+        },
+      } as any)
+  );
 
   const selected = frameworks.find((f) => f.value === value);
 
   return (
-    <Popover modal open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild>
-        <Button
-          id={id}
-          variant="outline"
-          role="combobox"
-          aria-expanded={open}
-          className="justify-between w-full"
-          aria-controls={`${id}-listbox`}
-          aria-haspopup="listbox"
-        >
-          {selected
-            ? `${selected.label} (${selected.offset})`
-            : "Select a timezone..."}
-          <ChevronsUpDown className="opacity-50" />
-        </Button>
-      </PopoverTrigger>
-
-      <PopoverContent className="p-0 w-full">
-        <Command>
-          <CommandInput
-            placeholder="Search by city, UTC, or region…"
-            className="h-9"
-          />
-
-          <CommandList
-            id={`${id}-listbox`}
-            role="listbox"
-            className="max-h-75 overflow-y-auto"
+    <>
+      <input
+        ref={internalRef}
+        type="hidden"
+        value={value}
+        style={{ display: "none" }}
+      />
+      <Popover modal open={open} onOpenChange={setOpen}>
+        <PopoverTrigger asChild>
+          <Button
+            id={id}
+            variant="outline"
+            role="combobox"
+            aria-expanded={open}
+            className="justify-between w-full"
+            aria-controls={`${id}-listbox`}
+            aria-haspopup="listbox"
           >
-            <CommandEmpty>No timezone found.</CommandEmpty>
+            {selected
+              ? `${selected.label} (${selected.offset})`
+              : "Select a timezone..."}
+            <ChevronsUpDown className="opacity-50" />
+          </Button>
+        </PopoverTrigger>
 
-            <CommandGroup>
-              {frameworks.map((framework) => (
-                <CommandItem
-                  key={framework.value}
-                  value={framework.search} // 🔑 enables searching by UTC / label / value
-                  onSelect={() => {
-                    setValue(framework.value);
-                    setOpen(false);
-                  }}
-                >
-                  <div className="flex flex-col">
-                    <span>{framework.label}</span>
-                    <span className="text-xs text-muted-foreground">
-                      {framework.offset} · {framework.value}
-                    </span>
-                  </div>
+        <PopoverContent className="p-0 w-full">
+          <Command>
+            <CommandInput
+              placeholder="Search by city, UTC, or region…"
+              className="h-9"
+            />
 
-                  <Check
-                    className={cn(
-                      "ml-auto",
-                      value === framework.value ? "opacity-100" : "opacity-0"
-                    )}
-                  />
-                </CommandItem>
-              ))}
-            </CommandGroup>
-          </CommandList>
-        </Command>
-      </PopoverContent>
-    </Popover>
+            <CommandList
+              id={`${id}-listbox`}
+              role="listbox"
+              className="max-h-75 overflow-y-auto"
+            >
+              <CommandEmpty>No timezone found.</CommandEmpty>
+
+              <CommandGroup>
+                {frameworks.map((framework) => (
+                  <CommandItem
+                    key={framework.value}
+                    value={framework.search} // 🔑 enables searching by UTC / label / value
+                    onSelect={() => {
+                      handleValueChange(framework.value);
+                      setOpen(false);
+                    }}
+                  >
+                    <div className="flex flex-col">
+                      <span>{framework.label}</span>
+                      <span className="text-xs text-muted-foreground">
+                        {framework.offset} · {framework.value}
+                      </span>
+                    </div>
+
+                    <Check
+                      className={cn(
+                        "ml-auto",
+                        value === framework.value ? "opacity-100" : "opacity-0"
+                      )}
+                    />
+                  </CommandItem>
+                ))}
+              </CommandGroup>
+            </CommandList>
+          </Command>
+        </PopoverContent>
+      </Popover>
+    </>
   );
-}
+});

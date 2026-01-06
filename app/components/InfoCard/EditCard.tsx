@@ -1,3 +1,5 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -11,54 +13,159 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { EllipsisVertical } from "lucide-react";
+import { EllipsisVertical, Trash2 } from "lucide-react";
 import { TimezoneSelector } from "../TimezoneSelector";
-import AvatarUpload from "./AvatarUpload";
+import AvatarUpload, { type AvatarUploadRef } from "./AvatarUpload";
+import { useRef, useState } from "react";
+import { friendStore } from "@/lib/stores/friendStore";
+import { Friend } from "@/lib/types/friend";
+import { fileToBase64 } from "@/lib/utils/avatarUtils";
+import { z } from "zod";
 
-export function EditCard() {
+// Zod schema
+const friendSchema = z.object({
+  name: z.string().min(1, "Name is required"),
+  timezone: z.string().min(1, "Timezone is required"),
+  birthday: z.string().optional(),
+});
+
+export function EditCard({ friend }: { friend: Friend }) {
+  const avatarRef = useRef<AvatarUploadRef>(null);
+
+  const [open, setOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [name, setName] = useState(friend.name);
+  const [timezone, setTimezone] = useState(friend.timezone);
+  const [birthday, setBirthday] = useState(friend.birthday || "");
+
+  // Store validation errors
+  const [errors, setErrors] = useState<{ name?: string; timezone?: string }>(
+    {}
+  );
+
+  const handleSubmit = async () => {
+    setIsLoading(true);
+    setErrors({}); // reset errors
+
+    const result = friendSchema.safeParse({
+      name,
+      timezone: timezone || "UTC",
+      birthday: birthday || undefined,
+    });
+
+    if (!result.success) {
+      const fieldErrors: any = {};
+      result.error.issues.forEach((err) => {
+        if (err.path[0]) fieldErrors[err.path[0]] = err.message;
+      });
+      setErrors(fieldErrors);
+      setIsLoading(false);
+      return;
+    }
+
+    try {
+      let avatarBase64: string | undefined;
+      const selectedFile = avatarRef.current?.getFile();
+      if (selectedFile?.file instanceof File) {
+        avatarBase64 = await fileToBase64(selectedFile.file);
+      }
+
+      friendStore.updateFriend(friend.id, {
+        ...result.data,
+        ...(avatarBase64 && { avatar: avatarBase64 }),
+      });
+
+      setOpen(false);
+      setErrors({});
+    } catch (error) {
+      console.error("Error updating friend:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleDelete = () => {
+    if (confirm("Are you sure you want to delete this friend?")) {
+      friendStore.removeFriend(friend.id);
+      setOpen(false);
+    }
+  };
+
   return (
-    <Dialog>
-      <form>
-        <DialogTrigger asChild>
-          <EllipsisVertical className="w-4 cursor-pointer" />
-        </DialogTrigger>
-        <DialogContent className="sm:max-w-106.25">
-          <DialogHeader>
-            <DialogTitle>Edit Friend</DialogTitle>
-            <DialogDescription>
-              Update friend&apos;s name and timezone.
-            </DialogDescription>
-          </DialogHeader>
-          <div className="grid gap-4">
-            <div className="grid gap-3">
-              <AvatarUpload />
-            </div>
-            <div className="grid gap-3">
-              <Label htmlFor="friend-name">Name</Label>
-              <Input id="friend-name" name="name" defaultValue="Pedro Duarte" />
-            </div>
-            <div className="grid gap-3">
-              <Label htmlFor="timezone">Timezone</Label>
-              <TimezoneSelector id="timezone" />
-            </div>
-            <div className="grid gap-3">
-              <Label htmlFor="birthday">
-                Birthday{" "}
-                <span className="text-muted-foreground text-sm">
-                  (optional)
-                </span>
-              </Label>
-              <Input id="birthday" name="birthday" type="date" />
-            </div>
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild>
+        <EllipsisVertical className="w-4 cursor-pointer" />
+      </DialogTrigger>
+
+      <DialogContent className="sm:max-w-106.25">
+        <DialogHeader>
+          <DialogTitle>Edit Friend</DialogTitle>
+          <DialogDescription>
+            Update friend&apos;s name and timezone.
+          </DialogDescription>
+        </DialogHeader>
+
+        <div className="grid gap-4">
+          <div className="grid gap-3">
+            <AvatarUpload defaultAvatar={friend.avatar} ref={avatarRef} />
           </div>
-          <DialogFooter>
-            <DialogClose asChild>
-              <Button variant="outline">Cancel</Button>
-            </DialogClose>
-            <Button type="submit">Save changes</Button>
-          </DialogFooter>
-        </DialogContent>
-      </form>
+
+          <div className="grid gap-1">
+            <Label htmlFor="friend-name">Name</Label>
+            <Input
+              id="friend-name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
+            {errors.name && (
+              <p className="text-red-500 text-sm">{errors.name}</p>
+            )}
+          </div>
+
+          <div className="grid gap-1">
+            <Label htmlFor="timezone">Timezone</Label>
+            <TimezoneSelector
+              id="timezone"
+              value={timezone}
+              onChange={setTimezone}
+            />
+            {errors.timezone && (
+              <p className="text-red-500 text-sm">{errors.timezone}</p>
+            )}
+          </div>
+
+          <div className="grid gap-1">
+            <Label htmlFor="birthday">
+              Birthday{" "}
+              <span className="text-muted-foreground text-sm">(optional)</span>
+            </Label>
+            <Input
+              id="birthday"
+              type="date"
+              value={birthday}
+              onChange={(e) => setBirthday(e.target.value)}
+            />
+          </div>
+        </div>
+
+        <DialogFooter>
+          <Button
+            type="button"
+            variant="ghost"
+            onClick={handleDelete}
+            className="mr-auto"
+          >
+            <Trash2 />
+            Delete
+          </Button>
+          <DialogClose asChild>
+            <Button variant="outline">Cancel</Button>
+          </DialogClose>
+          <Button type="button" disabled={isLoading} onClick={handleSubmit}>
+            {isLoading ? "Saving..." : "Save changes"}
+          </Button>
+        </DialogFooter>
+      </DialogContent>
     </Dialog>
   );
 }

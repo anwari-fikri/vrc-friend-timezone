@@ -1,9 +1,22 @@
+"use client";
+
 import { Alert, AlertTitle } from "@/components/ui/alert";
 import { ActionBar } from "./components/ActionBar";
 import { GroupSelector } from "./components/GroupSelector";
 import { PopcornIcon } from "lucide-react";
+import { useEffect, useState } from "react";
+import { friendStore } from "@/lib/stores/friendStore";
+import { observer } from "mobx-react-lite";
 
-export default function Home() {
+export default observer(function Home() {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    friendStore.loadFriends().then(() => setMounted(true));
+  }, []);
+
+  if (!mounted) return null;
+
   return (
     <div className="mx-auto w-full max-w-md p-4">
       <div className="mb-4">
@@ -13,13 +26,15 @@ export default function Home() {
         </p>
       </div>
       <ActionBar />
-      <Alert className="mb-4">
-        <PopcornIcon />
-        <AlertTitle>
-          Example will be removed once you added your first friend!
-        </AlertTitle>
-      </Alert>
+      {friendStore.friends.length <= 0 && (
+        <Alert className="mb-4">
+          <PopcornIcon />
+          <AlertTitle>
+            Start by adding your friends using the "Add Friend" button
+          </AlertTitle>
+        </Alert>
+      )}
       <GroupSelector />
     </div>
   );
-}
+});

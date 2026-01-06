@@ -15,65 +15,65 @@ class FriendStore {
   isLoaded = false;
 
   private SEED_DATA: Friend[] = [
-    {
-      id: "1",
-      name: "Alice Chen",
-      timezone: "Asia/Shanghai",
-      birthday: "1998-04-12",
-    },
-    {
-      id: "2",
-      name: "Bob Thompson",
-      timezone: "America/New_York",
-    },
-    {
-      id: "3",
-      name: "Carlos Rodriguez",
-      timezone: "America/Mexico_City",
-      birthday: "2000-11-05",
-    },
-    {
-      id: "4",
-      name: "Diana Müller",
-      timezone: "Europe/Berlin",
-      birthday: "1997-03-18",
-    },
-    {
-      id: "5",
-      name: "Emma Watson",
-      timezone: "Europe/London",
-      birthday: "1999-09-25",
-    },
-    {
-      id: "6",
-      name: "Fumiko Tanaka",
-      timezone: "Asia/Tokyo",
-      birthday: "1996-12-08",
-    },
-    {
-      id: "7",
-      name: "Grayson Lee",
-      timezone: "Asia/Singapore",
-      birthday: "2001-01-14",
-    },
-    {
-      id: "8",
-      name: "Hannah Park",
-      timezone: "Asia/Seoul",
-      birthday: "1998-06-30",
-    },
-    {
-      id: "9",
-      name: "Ivan Petrov",
-      timezone: "Europe/Moscow",
-      birthday: "1994-10-11",
-    },
-    {
-      id: "10",
-      name: "Jasmine Silva",
-      timezone: "America/Los_Angeles",
-      birthday: "1999-02-28",
-    },
+    // {
+    //   id: "1",
+    //   name: "Alice Chen",
+    //   timezone: "Asia/Shanghai",
+    //   birthday: "1998-04-12",
+    // },
+    // {
+    //   id: "2",
+    //   name: "Bob Thompson",
+    //   timezone: "America/New_York",
+    // },
+    // {
+    //   id: "3",
+    //   name: "Carlos Rodriguez",
+    //   timezone: "America/Mexico_City",
+    //   birthday: "2000-11-05",
+    // },
+    // {
+    //   id: "4",
+    //   name: "Diana Müller",
+    //   timezone: "Europe/Berlin",
+    //   birthday: "1997-03-18",
+    // },
+    // {
+    //   id: "5",
+    //   name: "Emma Watson",
+    //   timezone: "Europe/London",
+    //   birthday: "1999-09-25",
+    // },
+    // {
+    //   id: "6",
+    //   name: "Fumiko Tanaka",
+    //   timezone: "Asia/Tokyo",
+    //   birthday: "1996-12-08",
+    // },
+    // {
+    //   id: "7",
+    //   name: "Grayson Lee",
+    //   timezone: "Asia/Singapore",
+    //   birthday: "2001-01-14",
+    // },
+    // {
+    //   id: "8",
+    //   name: "Hannah Park",
+    //   timezone: "Asia/Seoul",
+    //   birthday: "1998-06-30",
+    // },
+    // {
+    //   id: "9",
+    //   name: "Ivan Petrov",
+    //   timezone: "Europe/Moscow",
+    //   birthday: "1994-10-11",
+    // },
+    // {
+    //   id: "10",
+    //   name: "Jasmine Silva",
+    //   timezone: "America/Los_Angeles",
+    //   birthday: "1999-02-28",
+    // },
   ];
 
   constructor() {
@@ -97,6 +97,12 @@ class FriendStore {
   }
 
   addFriend(friend: Friend) {
+    // If this is the first custom friend and we still have seed data, remove it
+    if (this.friends.length === this.SEED_DATA.length) {
+      const seedIds = this.SEED_DATA.map((f) => f.id);
+      this.friends = this.friends.filter((f) => !seedIds.includes(f.id));
+    }
+    friend.isFavorite = friend.isFavorite || false;
     this.friends.push(friend);
     this.persistFriends();
   }
@@ -115,6 +121,19 @@ class FriendStore {
       this.friends.splice(index, 1);
       this.persistFriends();
     }
+  }
+
+  toggleFavorite(id: string) {
+    const friend = this.friends.find((f) => f.id === id);
+    if (friend) {
+      friend.isFavorite = !friend.isFavorite;
+      this.persistFriends();
+    }
+  }
+
+  clearAllData() {
+    this.friends = [];
+    localStorage.removeItem(this.STORAGE_KEY);
   }
 
   /* ==================== Computed Properties ==================== */
@@ -162,7 +181,8 @@ class FriendStore {
       Europe: [],
       Oceania: [],
       Africa: [],
-      Antarctica: [],
+      Australia: [],
+      Pacific: [],
     };
 
     this.enrichedFriends.forEach((friend) => {

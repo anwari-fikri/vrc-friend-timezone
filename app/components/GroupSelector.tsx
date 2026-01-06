@@ -7,10 +7,12 @@ import { Separator } from "@/components/ui/separator";
 import InfoCard from "./InfoCard/InfoCard";
 import { friendStore } from "@/lib/stores/friendStore";
 import { Friend } from "@/lib/types/friend";
+import { FavouriteOnlyToggle } from "./FavouriteOnlyToggle";
 
 export const GroupSelector = observer(function GroupSelector() {
   const { morning, afternoon, evening, night } = friendStore.friendsByTimeOfDay;
-  const { Asia, America, Europe, Oceania } = friendStore.friendsByRegion;
+  const { Asia, America, Europe, Oceania, Australia, Pacific, Africa } =
+    friendStore.friendsByRegion;
 
   return (
     <Tabs className="w-full" defaultValue="time-of-day">
@@ -18,6 +20,7 @@ export const GroupSelector = observer(function GroupSelector() {
         <TabsTrigger value="time-of-day">Time of day</TabsTrigger>
         <TabsTrigger value="region">Region</TabsTrigger>
       </TabsList>
+      <FavouriteOnlyToggle />
 
       {/* ✅ TIME OF DAY TAB */}
       <TabsContent value="time-of-day" className="space-y-6">
@@ -49,6 +52,9 @@ export const GroupSelector = observer(function GroupSelector() {
         <RegionSection region="America" friends={America} />
         <RegionSection region="Europe" friends={Europe} />
         <RegionSection region="Oceania" friends={Oceania} />
+        <RegionSection region="Australia" friends={Australia} />
+        <RegionSection region="Pacific" friends={Pacific} />
+        <RegionSection region="Africa" friends={Africa} />
       </TabsContent>
     </Tabs>
   );
