@@ -97,7 +97,7 @@ export function TimezoneSelector({ id }: { id?: string }) {
         </Button>
       </PopoverTrigger>
 
-      <PopoverContent className="p-0 w-[340px]">
+      <PopoverContent className="p-0 w-full">
         <Command>
           <CommandInput
             placeholder="Search by city, UTC, or region…"
@@ -107,7 +107,7 @@ export function TimezoneSelector({ id }: { id?: string }) {
           <CommandList
             id={`${id}-listbox`}
             role="listbox"
-            className="max-h-[300px] overflow-y-auto"
+            className="max-h-75 overflow-y-auto"
           >
             <CommandEmpty>No timezone found.</CommandEmpty>
 

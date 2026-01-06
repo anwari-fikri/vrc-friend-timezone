@@ -11,22 +11,24 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { EllipsisVertical } from "lucide-react";
+import { PlusCircle } from "lucide-react";
 import { TimezoneSelector } from "../TimezoneSelector";
 import AvatarUpload from "./AvatarUpload";
 
-export function EditCard() {
+export function AddCard() {
   return (
     <Dialog>
-      <form>
+      <form className="w-full">
         <DialogTrigger asChild>
-          <EllipsisVertical className="w-4 cursor-pointer" />
+          <Button className="w-full flex-1 rounded-r-none">
+            Add Friend <PlusCircle />
+          </Button>
         </DialogTrigger>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
-            <DialogTitle>Edit Friend</DialogTitle>
+            <DialogTitle>Add Friend</DialogTitle>
             <DialogDescription>
-              Update friend&apos;s name and timezone.
+              Add a new friend with their name and timezone.
             </DialogDescription>
           </DialogHeader>
           <div className="grid gap-4">
@@ -55,7 +57,7 @@ export function EditCard() {
             <DialogClose asChild>
               <Button variant="outline">Cancel</Button>
             </DialogClose>
-            <Button type="submit">Save changes</Button>
+            <Button type="submit">Add New Friend</Button>
           </DialogFooter>
         </DialogContent>
       </form>

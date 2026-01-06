@@ -25,7 +25,6 @@ class FriendStore {
       id: "2",
       name: "Bob Thompson",
       timezone: "America/New_York",
-      birthday: "1995-07-22",
     },
     {
       id: "3",

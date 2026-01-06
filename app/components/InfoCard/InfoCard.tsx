@@ -6,9 +6,10 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Cake, Clock } from "lucide-react";
-import { Separator } from "@/components/ui/separator";
 import { EditCard } from "./EditCard";
 import { Friend } from "@/lib/types/friend";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import AvatarFallbackImg from "@/public/images/AvatarFallbackImg.png";
 
 const InfoCard = ({ friend }: { friend: Friend }) => {
   const hours = friend.localTime?.getHours() ?? 0;
@@ -17,7 +18,15 @@ const InfoCard = ({ friend }: { friend: Friend }) => {
   return (
     <Card className="flex flex-col gap-2 mb-3">
       <CardHeader>
-        <CardTitle className="font-bold text-lg">{friend.name}</CardTitle>
+        <CardTitle className="font-bold text-lg flex gap-2 items-center">
+          <Avatar>
+            <AvatarImage src={AvatarFallbackImg.src} alt="@shadcn" />
+            <AvatarFallback>
+              {friend.name.slice(0, 2).toUpperCase()}
+            </AvatarFallback>
+          </Avatar>
+          {friend.name}
+        </CardTitle>
         <CardAction>
           <EditCard />
         </CardAction>
@@ -44,7 +53,7 @@ const InfoCard = ({ friend }: { friend: Friend }) => {
         {/* Right column */}
         <div className="w-2/3 flex flex-col">
           <p>
-            {friend.name} is{" "}
+            {friend.name} is <br />
             <span className="font-semibold">{friend.offsetText}</span>
           </p>
           <p className="font-normal text-muted-foreground text-sm">

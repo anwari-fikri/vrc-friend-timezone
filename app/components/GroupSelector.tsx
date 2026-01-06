@@ -74,7 +74,7 @@ function TimeOfDaySection({
           No friends awake right now
         </p>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 gap-4">
           {friends.map((friend) => (
             <InfoCard key={friend.id} friend={friend} />
           ))}
@@ -102,7 +102,7 @@ function RegionSection({
           No friends in this region
         </p>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 gap-4">
           {friends.map((friend) => (
             <InfoCard key={friend.id} friend={friend} />
           ))}
