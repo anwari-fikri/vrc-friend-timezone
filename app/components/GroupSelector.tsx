@@ -20,7 +20,6 @@ export const GroupSelector = observer(function GroupSelector() {
         <TabsTrigger value="time-of-day">Time of day</TabsTrigger>
         <TabsTrigger value="region">Region</TabsTrigger>
       </TabsList>
-      <FavouriteOnlyToggle />
 
       {/* ✅ TIME OF DAY TAB */}
       <TabsContent value="time-of-day" className="space-y-6">
@@ -77,7 +76,7 @@ function TimeOfDaySection({
 
       {friends.length === 0 ? (
         <p className="text-muted-foreground text-sm">
-          No friends awake right now
+          No friends in this time of day
         </p>
       ) : (
         <div className="grid grid-cols-1 gap-4">

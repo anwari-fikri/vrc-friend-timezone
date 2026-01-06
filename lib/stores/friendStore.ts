@@ -13,6 +13,7 @@ class FriendStore {
   STORAGE_KEY = "friends";
   friends: Friend[] = [];
   isLoaded = false;
+  showFavoritesOnly = false;
 
   private SEED_DATA: Friend[] = [
     // {
@@ -131,6 +132,10 @@ class FriendStore {
     }
   }
 
+  setShowFavoritesOnly(value: boolean) {
+    this.showFavoritesOnly = value;
+  }
+
   clearAllData() {
     this.friends = [];
     localStorage.removeItem(this.STORAGE_KEY);
@@ -140,7 +145,11 @@ class FriendStore {
 
   /** Enriched friends with calculated time data */
   get enrichedFriends(): Friend[] {
-    return this.friends
+    const baseFriends = this.showFavoritesOnly
+      ? this.friends.filter((f) => f.isFavorite)
+      : this.friends;
+
+    return baseFriends
       .map((friend) => ({
         ...friend,
         localTime: getLocalTime(friend.timezone),

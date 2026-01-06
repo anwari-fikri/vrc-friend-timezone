@@ -25,6 +25,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { FavouriteOnlyToggle } from "./FavouriteOnlyToggle";
 
 export function ActionBar() {
   const handleClearAllData = () => {

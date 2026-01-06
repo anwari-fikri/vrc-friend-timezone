@@ -7,6 +7,8 @@ import { PopcornIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { friendStore } from "@/lib/stores/friendStore";
 import { observer } from "mobx-react-lite";
+import { FavouriteOnlyToggle } from "./components/FavouriteOnlyToggle";
+import { ModeToggle } from "./components/ModeToggle";
 
 export default observer(function Home() {
   const [mounted, setMounted] = useState(false);
@@ -20,12 +22,17 @@ export default observer(function Home() {
   return (
     <div className="mx-auto w-full max-w-md p-4">
       <div className="mb-4">
-        <h2 className="text-xl font-semibold">VRC Friend Timezone</h2>
+        <div className="flex justify-between">
+          <h2 className="text-xl font-semibold">VRC Friend Timezone</h2>
+          <ModeToggle />
+        </div>
+
         <p className="text-muted-foreground ">
           See your friends in their local time.
         </p>
       </div>
       <ActionBar />
+      <FavouriteOnlyToggle />
       {friendStore.friends.length <= 0 && (
         <Alert className="mb-4">
           <PopcornIcon />
