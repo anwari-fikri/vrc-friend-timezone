@@ -6,6 +6,7 @@ import {
   getLocalTime,
   getCurrentHour,
   getTimeOfDay,
+  getTimezoneUtc,
 } from "@/lib/utils/timezoneUtils";
 import { Friend, FriendGrouped, FriendByRegion } from "@/lib/types/friend";
 
@@ -154,6 +155,7 @@ class FriendStore {
         ...friend,
         localTime: getLocalTime(friend.timezone),
         offsetHours: getOffsetHours(friend.timezone),
+        timezoneUtc: getTimezoneUtc(friend.timezone),
         offsetLabel: getOffsetLabel(friend.timezone),
         offsetText: formatOffsetText(getOffsetHours(friend.timezone)),
         timeOfDay: getTimeOfDay(getCurrentHour(friend.timezone)),
@@ -171,6 +173,7 @@ class FriendStore {
         ...friend,
         localTime: getLocalTime(friend.timezone),
         offsetHours: getOffsetHours(friend.timezone),
+        timezoneUtc: getTimezoneUtc(friend.timezone),
         offsetLabel: getOffsetLabel(friend.timezone),
         offsetText: formatOffsetText(getOffsetHours(friend.timezone)),
         timeOfDay: getTimeOfDay(getCurrentHour(friend.timezone)),

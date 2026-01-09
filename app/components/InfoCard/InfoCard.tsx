@@ -12,11 +12,9 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import AvatarFallbackImg from "@/public/images/AvatarFallbackImg.png";
 import { friendStore } from "@/lib/stores/friendStore";
 import { observer } from "mobx-react-lite";
-import { Button } from "@/components/ui/button";
 
 const InfoCard = observer(({ friend }: { friend: Friend }) => {
   const hours = friend.localTime?.getHours() ?? 0;
-  const isAM = hours < 12;
 
   return (
     <Card className="flex flex-col gap-2 mb-3">
@@ -75,7 +73,9 @@ const InfoCard = observer(({ friend }: { friend: Friend }) => {
             <span className="font-semibold">{friend.offsetText}</span>
           </p>
           <p className="font-normal text-muted-foreground text-sm">
-            {friend.timezone.replace("_", " ")} ({friend.offsetLabel})
+            {friend.timezone.replace("_", " ")} (UTC
+            {(friend.timezoneUtc ?? 0) > 0 ? "+" : ""}
+            {friend.timezoneUtc ?? 0})
           </p>
           {friend.birthday && (
             <div className="flex gap-2 items-center mt-2">

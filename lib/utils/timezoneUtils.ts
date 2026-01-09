@@ -1,15 +1,11 @@
-export const getOffsetHours = (timezone: string): number => {
+export const getOffsetHours = (timeZone: string): number => {
   const now = new Date();
 
-  const utc = new Date(
-    now.toLocaleString("en-US", { timeZone: "UTC" })
-  ).getTime();
+  const localTime = new Date(now.toLocaleString("en-US", { timeZone }));
 
-  const remote = new Date(
-    now.toLocaleString("en-US", { timeZone: timezone })
-  ).getTime();
+  const diffMs = localTime.getTime() - now.getTime();
 
-  return Math.round((remote - utc) / 36e5);
+  return Math.round(diffMs / 36e5);
 };
 
 export const getOffsetLabel = (timezone: string): string => {
@@ -41,6 +37,16 @@ export const getCurrentHour = (timezone: string): number => {
     return 0;
   }
 };
+
+export function getTimezoneUtc(timezone: string): number {
+  const now = new Date();
+
+  const utcDate = new Date(now.toLocaleString("en-US", { timeZone: "UTC" }));
+
+  const tzDate = new Date(now.toLocaleString("en-US", { timeZone: timezone }));
+
+  return (tzDate.getTime() - utcDate.getTime()) / (1000 * 60 * 60);
+}
 
 export const getTimeOfDay = (
   hour: number

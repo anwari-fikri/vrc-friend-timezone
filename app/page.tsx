@@ -3,7 +3,7 @@
 import { Alert, AlertTitle } from "@/components/ui/alert";
 import { ActionBar } from "./components/ActionBar";
 import { GroupSelector } from "./components/GroupSelector";
-import { PopcornIcon } from "lucide-react";
+import { UserPlus } from "lucide-react";
 import { useEffect, useState } from "react";
 import { friendStore } from "@/lib/stores/friendStore";
 import { observer } from "mobx-react-lite";
@@ -35,9 +35,9 @@ export default observer(function Home() {
       <FavouriteOnlyToggle />
       {friendStore.friends.length <= 0 && (
         <Alert className="mb-4">
-          <PopcornIcon />
+          <UserPlus />
           <AlertTitle>
-            Start by adding your friends using the "Add Friend" button
+            Add your friends using the "Add Friend" button
           </AlertTitle>
         </Alert>
       )}

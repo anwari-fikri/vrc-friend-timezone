@@ -12,6 +12,7 @@ export type Friend = {
   localTime?: Date;
   offsetHours?: number;
   offsetLabel?: string;
+  timezoneUtc?: number;
   offsetText?: string;
   timeOfDay?: TimeOfDay;
 };
