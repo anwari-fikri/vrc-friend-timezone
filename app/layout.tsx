@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { FriendStoreProvider } from "@/lib/stores/friendStoreContext";
 import { ThemeProvider } from "./components/ThemeProvider";
+import { Analytics } from "@vercel/analytics/next";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -35,8 +36,9 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <FriendStoreProvider>{children}</FriendStoreProvider>{" "}
+          <FriendStoreProvider>{children}</FriendStoreProvider>
         </ThemeProvider>
+        <Analytics />
       </body>
     </html>
   );
