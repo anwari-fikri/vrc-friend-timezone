@@ -14,8 +14,6 @@ import { friendStore } from "@/lib/stores/friendStore";
 import { observer } from "mobx-react-lite";
 
 const InfoCard = observer(({ friend }: { friend: Friend }) => {
-  const hours = friend.localTime?.getHours() ?? 0;
-
   return (
     <Card className="flex flex-col gap-2 mb-3">
       <CardHeader>
@@ -47,9 +45,9 @@ const InfoCard = observer(({ friend }: { friend: Friend }) => {
           </div>
         </CardAction>
       </CardHeader>
-      <CardContent className="flex gap-4">
+      <CardContent className="flex flex-col gap-2">
         {/* Left column */}
-        <div className="w-1/3 flex flex-col">
+        <div className="flex flex-col">
           <p className="font-semibold text-muted-foreground text-normal">
             {friend.localTime?.toLocaleDateString("en-US", {
               weekday: "short",
@@ -67,14 +65,14 @@ const InfoCard = observer(({ friend }: { friend: Friend }) => {
         </div>
 
         {/* Right column */}
-        <div className="w-2/3 flex flex-col gap-1">
+        <div className="flex flex-col gap-1">
           <p>
             {friend.name} is{" "}
             <span className="font-semibold">{friend.offsetText}</span>
           </p>
           <p className="font-normal text-muted-foreground text-sm">
             {friend.timezone.replace("_", " ")} (UTC
-            {(friend.timezoneUtc ?? 0) > 0 ? "+" : ""}
+            {(friend.timezoneUtc ?? 0) >= 0 ? "+" : ""}
             {friend.timezoneUtc ?? 0})
           </p>
           {friend.birthday && (

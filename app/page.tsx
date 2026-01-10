@@ -20,27 +20,29 @@ export default observer(function Home() {
   if (!mounted) return null;
 
   return (
-    <div className="mx-auto w-full max-w-md p-4">
-      <div className="mb-4">
-        <div className="flex justify-between">
-          <h2 className="text-xl font-semibold">VRC Friend Timezone</h2>
-          <ModeToggle />
-        </div>
+    <div className="mx-auto w-full max-w-md md:max-w-7xl p-4">
+      <div className="w-full max-w-md mx-auto">
+        <div className="mb-4 ">
+          <div className="flex justify-between">
+            <h2 className="text-xl font-semibold">VRC Friend Timezone</h2>
+            <ModeToggle />
+          </div>
 
-        <p className="text-muted-foreground ">
-          See your friends in their local time.
-        </p>
+          <p className="text-muted-foreground ">
+            See your friends in their local time.
+          </p>
+        </div>
+        <ActionBar />
+        <FavouriteOnlyToggle />
+        {friendStore.friends.length <= 0 && (
+          <Alert className="mb-4">
+            <UserPlus />
+            <AlertTitle>
+              Add your friends using the "Add Friend" button
+            </AlertTitle>
+          </Alert>
+        )}
       </div>
-      <ActionBar />
-      <FavouriteOnlyToggle />
-      {friendStore.friends.length <= 0 && (
-        <Alert className="mb-4">
-          <UserPlus />
-          <AlertTitle>
-            Add your friends using the "Add Friend" button
-          </AlertTitle>
-        </Alert>
-      )}
       <GroupSelector />
     </div>
   );
