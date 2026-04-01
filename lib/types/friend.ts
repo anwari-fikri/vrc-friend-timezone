@@ -7,6 +7,7 @@ export type Friend = {
   birthday?: string;
   isFavorite?: boolean;
   avatar?: string;
+  note?: string;
 
   // Computed/derived at runtime
   localTime?: Date;

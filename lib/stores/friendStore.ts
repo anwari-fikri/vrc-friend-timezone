@@ -12,9 +12,12 @@ import { Friend, FriendGrouped, FriendByRegion } from "@/lib/types/friend";
 
 class FriendStore {
   STORAGE_KEY = "friends";
+  SETTINGS_KEY = "friendstore_settings";
   friends: Friend[] = [];
   isLoaded = false;
   showFavoritesOnly = false;
+  showDetailedView = false;
+  show24HourClock = false;
 
   private SEED_DATA: Friend[] = [
     // {
@@ -89,6 +92,13 @@ class FriendStore {
   async loadFriends() {
     const savedFriends = this.getFriends();
     this.friends = savedFriends.length > 0 ? savedFriends : this.SEED_DATA;
+
+    // Load settings
+    const settings = this.getSettings();
+    this.showFavoritesOnly = settings.showFavoritesOnly ?? false;
+    this.showDetailedView = settings.showDetailedView ?? false;
+    this.show24HourClock = settings.show24HourClock ?? false;
+
     this.isLoaded = true;
   }
 
@@ -135,6 +145,17 @@ class FriendStore {
 
   setShowFavoritesOnly(value: boolean) {
     this.showFavoritesOnly = value;
+    this.persistSettings();
+  }
+
+  setShowDetailedView(value: boolean) {
+    this.showDetailedView = value;
+    this.persistSettings();
+  }
+
+  setShow24HourClock(value: boolean) {
+    this.show24HourClock = value;
+    this.persistSettings();
   }
 
   clearAllData() {
@@ -234,6 +255,26 @@ class FriendStore {
   getFriends(): Friend[] {
     const data = localStorage.getItem(this.STORAGE_KEY);
     return data ? JSON.parse(data) : [];
+  }
+
+  private persistSettings() {
+    localStorage.setItem(
+      this.SETTINGS_KEY,
+      JSON.stringify({
+        showFavoritesOnly: this.showFavoritesOnly,
+        showDetailedView: this.showDetailedView,
+        show24HourClock: this.show24HourClock,
+      }),
+    );
+  }
+
+  private getSettings(): {
+    showFavoritesOnly?: boolean;
+    showDetailedView?: boolean;
+    show24HourClock?: boolean;
+  } {
+    const data = localStorage.getItem(this.SETTINGS_KEY);
+    return data ? JSON.parse(data) : {};
   }
 }
 

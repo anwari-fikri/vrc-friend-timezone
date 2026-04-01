@@ -17,7 +17,7 @@ export const GroupSelector = observer(function GroupSelector() {
 
   return (
     <Tabs className="w-full" defaultValue="time-of-day">
-      <TabsList className="w-full mb-4">
+      <TabsList className="w-full md:w-md mx-auto mb-4">
         <TabsTrigger value="time-of-day">Time of day</TabsTrigger>
         <TabsTrigger value="region">Region</TabsTrigger>
       </TabsList>

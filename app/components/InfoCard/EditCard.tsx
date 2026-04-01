@@ -21,12 +21,14 @@ import { friendStore } from "@/lib/stores/friendStore";
 import { Friend } from "@/lib/types/friend";
 import { fileToBase64 } from "@/lib/utils/avatarUtils";
 import { z } from "zod";
+import { BirthdayPicker } from "@/components/BirthdayPicker";
 
 // Zod schema
 const friendSchema = z.object({
   name: z.string().min(1, "Name is required"),
   timezone: z.string().min(1, "Timezone is required"),
   birthday: z.string().optional(),
+  note: z.string().optional(),
 });
 
 export function EditCard({ friend }: { friend: Friend }) {
@@ -36,11 +38,18 @@ export function EditCard({ friend }: { friend: Friend }) {
   const [isLoading, setIsLoading] = useState(false);
   const [name, setName] = useState(friend.name);
   const [timezone, setTimezone] = useState(friend.timezone);
-  const [birthday, setBirthday] = useState(friend.birthday || "");
+  const [birthday, setBirthday] = useState<{ month: string; day: string }>(
+    () => {
+      if (!friend.birthday) return { month: "", day: "" };
+      const [month, day] = friend.birthday.split("-");
+      return { month: month ?? "", day: day ?? "" };
+    },
+  );
+  const [note, setNote] = useState(friend.note || "");
 
   // Store validation errors
   const [errors, setErrors] = useState<{ name?: string; timezone?: string }>(
-    {}
+    {},
   );
 
   const handleSubmit = async () => {
@@ -50,7 +59,11 @@ export function EditCard({ friend }: { friend: Friend }) {
     const result = friendSchema.safeParse({
       name,
       timezone: timezone || "UTC",
-      birthday: birthday || undefined,
+      birthday:
+        birthday.month && birthday.day
+          ? `${birthday.month}-${birthday.day}`
+          : undefined,
+      note: note || undefined,
     });
 
     if (!result.success) {
@@ -72,6 +85,10 @@ export function EditCard({ friend }: { friend: Friend }) {
 
       friendStore.updateFriend(friend.id, {
         ...result.data,
+        birthday:
+          birthday.month && birthday.day
+            ? `${birthday.month}-${birthday.day}`
+            : undefined,
         ...(avatarBase64 && { avatar: avatarBase64 }),
       });
 
@@ -139,11 +156,19 @@ export function EditCard({ friend }: { friend: Friend }) {
               Birthday{" "}
               <span className="text-muted-foreground text-sm">(optional)</span>
             </Label>
+            <BirthdayPicker value={birthday} onChange={setBirthday} />
+          </div>
+
+          <div className="grid gap-1">
+            <Label htmlFor="note">
+              Note{" "}
+              <span className="text-muted-foreground text-sm">(optional)</span>
+            </Label>
             <Input
-              id="birthday"
-              type="date"
-              value={birthday}
-              onChange={(e) => setBirthday(e.target.value)}
+              id="note"
+              value={note}
+              onChange={(e) => setNote(e.target.value)}
+              placeholder="Add a note..."
             />
           </div>
         </div>

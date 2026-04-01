@@ -21,12 +21,14 @@ import { friendStore } from "@/lib/stores/friendStore";
 import { Friend } from "@/lib/types/friend";
 import { fileToBase64 } from "@/lib/utils/avatarUtils";
 import { z } from "zod";
+import { BirthdayPicker } from "@/components/BirthdayPicker";
 
 // Zod schema
 const friendSchema = z.object({
   name: z.string().min(1, "Name is required"),
   timezone: z.string().min(1, "Timezone is required"),
   birthday: z.string().optional(),
+  note: z.string().optional(),
 });
 
 export function AddCard() {
@@ -38,11 +40,15 @@ export function AddCard() {
 
   const [name, setName] = useState("");
   const [timezone, setTimezone] = useState("");
-  const [birthday, setBirthday] = useState("");
+  const [birthday, setBirthday] = useState<{ month: string; day: string }>({
+    month: "",
+    day: "",
+  });
+  const [note, setNote] = useState("");
 
   // Store validation errors
   const [errors, setErrors] = useState<{ name?: string; timezone?: string }>(
-    {}
+    {},
   );
 
   const handleSubmit = async () => {
@@ -52,7 +58,11 @@ export function AddCard() {
     const result = friendSchema.safeParse({
       name,
       timezone: timezone || "UTC",
-      birthday: birthday || undefined,
+      birthday:
+        birthday.month && birthday.day
+          ? `${birthday.month}-${birthday.day}`
+          : undefined,
+      note: note || undefined,
     });
 
     if (!result.success) {
@@ -83,7 +93,8 @@ export function AddCard() {
       // Reset form
       setName("");
       setTimezone("");
-      setBirthday("");
+      setBirthday({ month: "", day: "" });
+      setNote("");
       setOpen(false);
       setErrors({});
     } catch (error) {
@@ -145,11 +156,19 @@ export function AddCard() {
               Birthday{" "}
               <span className="text-muted-foreground text-sm">(optional)</span>
             </Label>
+            <BirthdayPicker value={birthday} onChange={setBirthday} />
+          </div>
+
+          <div className="grid gap-1">
+            <Label htmlFor="note">
+              Note{" "}
+              <span className="text-muted-foreground text-sm">(optional)</span>
+            </Label>
             <Input
-              id="birthday"
-              type="date"
-              value={birthday}
-              onChange={(e) => setBirthday(e.target.value)}
+              id="note"
+              value={note}
+              onChange={(e) => setNote(e.target.value)}
+              placeholder="Add a note..."
             />
           </div>
         </div>
