@@ -5,17 +5,25 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Cake, Clock, Heart, Star } from "lucide-react";
+import { Cake, ChevronDown, Clock, Star } from "lucide-react";
 import { EditCard } from "./EditCard";
 import { Friend } from "@/lib/types/friend";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import AvatarFallbackImg from "@/public/images/AvatarFallbackImg.png";
 import { friendStore } from "@/lib/stores/friendStore";
 import { observer } from "mobx-react-lite";
+import { useState } from "react";
 
 const InfoCard = observer(({ friend }: { friend: Friend }) => {
-  const detailed = friendStore.showDetailedView;
-  const use24Hour = friendStore.show24HourClock; // add this
+  const [localExpanded, setLocalExpanded] = useState(false);
+  const use24Hour = friendStore.show24HourClock;
+
+  // Detailed if global setting is on OR user manually expanded this card
+  const detailed = friendStore.showDetailedView || localExpanded;
+
+  // Only show the toggle button when global detailed view is off
+  // (no point toggling if it's already forced open globally)
+  const showToggle = !friendStore.showDetailedView;
 
   return (
     <Card className="flex flex-col gap-2 mb-3">
@@ -34,8 +42,7 @@ const InfoCard = observer(({ friend }: { friend: Friend }) => {
 
             <div className="flex flex-col">
               <span className="font-medium leading-tight">{friend.name}</span>
-              {/* Birthday — only in detailed view */}
-              {detailed && friend.birthday && (
+              {friend.birthday && (
                 <span className="flex items-center gap-1 text-sm text-muted-foreground">
                   <Cake className="w-3 h-3" />
                   {new Date(friend.birthday).toLocaleDateString("en-US", {
@@ -58,6 +65,14 @@ const InfoCard = observer(({ friend }: { friend: Friend }) => {
               onClick={() => friendStore.toggleFavorite(friend.id)}
             />
             <EditCard friend={friend} />
+            {showToggle && (
+              <ChevronDown
+                className={`w-4 cursor-pointer transition-transform text-muted-foreground hover:text-foreground ${
+                  localExpanded ? "rotate-180" : ""
+                }`}
+                onClick={() => setLocalExpanded((prev) => !prev)}
+              />
+            )}
           </div>
         </CardAction>
       </CardHeader>
@@ -105,7 +120,7 @@ const InfoCard = observer(({ friend }: { friend: Friend }) => {
             </p>
             {friend.note && (
               <p className="text-sm text-muted-foreground mt-2">
-                "{friend.note}"
+                &quot;{friend.note}&quot;
               </p>
             )}
           </div>

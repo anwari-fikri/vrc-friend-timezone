@@ -42,7 +42,7 @@ export default observer(function Home() {
           <Alert className="mb-4">
             <UserPlus />
             <AlertTitle>
-              Add your friends using the "Add Friend" button
+              Add your friends using the &quot;Add Friend&quot; button
             </AlertTitle>
           </Alert>
         )}

@@ -7,7 +7,6 @@ import { Separator } from "@/components/ui/separator";
 import InfoCard from "./InfoCard/InfoCard";
 import { friendStore } from "@/lib/stores/friendStore";
 import { Friend } from "@/lib/types/friend";
-import { FavouriteOnlyToggle } from "./FavouriteOnlyToggle";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 
 export const GroupSelector = observer(function GroupSelector() {

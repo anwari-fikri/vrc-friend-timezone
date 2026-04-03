@@ -92,7 +92,7 @@ export const TimezoneSelector = React.forwardRef<
         get value() {
           return value;
         },
-      } as any)
+      }) as unknown as HTMLInputElement,
   );
 
   const selected = frameworks.find((f) => f.value === value);
@@ -112,18 +112,20 @@ export const TimezoneSelector = React.forwardRef<
             variant="outline"
             role="combobox"
             aria-expanded={open}
-            className="justify-between w-full"
+            className="justify-between w-full overflow-hidden"
             aria-controls={`${id}-listbox`}
             aria-haspopup="listbox"
           >
-            {selected
-              ? `${selected.label} (${selected.offset})`
-              : "Select a timezone..."}
-            <ChevronsUpDown className="opacity-50" />
+            <span className="truncate">
+              {selected
+                ? `${selected.label} (${selected.offset})`
+                : "Select a timezone..."}
+            </span>
+            <ChevronsUpDown className="opacity-50 shrink-0" />
           </Button>
         </PopoverTrigger>
 
-        <PopoverContent className="p-0 w-full">
+        <PopoverContent className="p-0 overflow-hidden">
           <Command>
             <CommandInput
               placeholder="Search by city, UTC, or region…"
@@ -141,23 +143,24 @@ export const TimezoneSelector = React.forwardRef<
                 {frameworks.map((framework) => (
                   <CommandItem
                     key={framework.value}
-                    value={framework.search} // 🔑 enables searching by UTC / label / value
+                    value={framework.search}
+                    className="min-w-0"
                     onSelect={() => {
                       handleValueChange(framework.value);
                       setOpen(false);
                     }}
                   >
-                    <div className="flex flex-col">
-                      <span>{framework.label}</span>
-                      <span className="text-xs text-muted-foreground">
+                    <div className="flex flex-col min-w-0 flex-1">
+                      <span className="truncate">{framework.label}</span>
+                      <span className="text-xs text-muted-foreground truncate">
                         {framework.offset} · {framework.value}
                       </span>
                     </div>
 
                     <Check
                       className={cn(
-                        "ml-auto",
-                        value === framework.value ? "opacity-100" : "opacity-0"
+                        "ml-auto shrink-0",
+                        value === framework.value ? "opacity-100" : "opacity-0",
                       )}
                     />
                   </CommandItem>

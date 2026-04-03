@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { AlertTriangle, User, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { forwardRef, useImperativeHandle } from "react";
+import Image from "next/image";
 
 interface AvatarUploadProps {
   maxSize?: number;
@@ -28,7 +29,7 @@ const AvatarUpload = forwardRef<AvatarUploadRef, AvatarUploadProps>(
       className,
       defaultAvatar,
     },
-    ref
+    ref,
   ) => {
     const [
       { files, isDragging, errors },
@@ -71,7 +72,7 @@ const AvatarUpload = forwardRef<AvatarUploadRef, AvatarUploadProps>(
               isDragging
                 ? "border-primary bg-primary/5"
                 : "border-muted-foreground/25 hover:border-muted-foreground/20",
-              previewUrl && "border-solid"
+              previewUrl && "border-solid",
             )}
             onDragEnter={handleDragEnter}
             onDragLeave={handleDragLeave}
@@ -82,7 +83,7 @@ const AvatarUpload = forwardRef<AvatarUploadRef, AvatarUploadProps>(
             <input {...getInputProps()} className="sr-only" />
 
             {previewUrl ? (
-              <img
+              <Image
                 src={previewUrl}
                 alt="Avatar"
                 className="h-full w-full object-cover"
@@ -137,7 +138,7 @@ const AvatarUpload = forwardRef<AvatarUploadRef, AvatarUploadProps>(
         )}
       </div>
     );
-  }
+  },
 );
 
 AvatarUpload.displayName = "AvatarUpload";

@@ -67,9 +67,14 @@ export function EditCard({ friend }: { friend: Friend }) {
     });
 
     if (!result.success) {
-      const fieldErrors: any = {};
+      const fieldErrors: Partial<
+        Record<keyof z.infer<typeof friendSchema>, string>
+      > = {};
       result.error.issues.forEach((err) => {
-        if (err.path[0]) fieldErrors[err.path[0]] = err.message;
+        if (err.path[0]) {
+          const key = err.path[0] as keyof z.infer<typeof friendSchema>;
+          fieldErrors[key] = err.message;
+        }
       });
       setErrors(fieldErrors);
       setIsLoading(false);
@@ -114,7 +119,7 @@ export function EditCard({ friend }: { friend: Friend }) {
         <EllipsisVertical className="w-4 cursor-pointer" />
       </DialogTrigger>
 
-      <DialogContent className="sm:max-w-106.25">
+      <DialogContent className="sm:max-w-106.25 overflow-hidden overflow-y-auto max-h-[90dvh]">
         <DialogHeader>
           <DialogTitle>Edit Friend</DialogTitle>
           <DialogDescription>
