@@ -23,39 +23,41 @@ export const GroupSelector = observer(function GroupSelector() {
 
       {/* ✅ TIME OF DAY TAB */}
       <TabsContent value="time-of-day">
-        <ScrollArea className="relative w-full rounded-md md:h-screen ">
-          <div className="pointer-events-none absolute left-0 top-0 z-10 hidden h-full w-4 bg-linear-to-r from-background to-transparent md:block" />
+        <div className="pointer-events-none absolute left-0 top-0 z-10 hidden h-full w-4 bg-linear-to-r from-background to-transparent md:block" />
 
-          {/* RIGHT FADE */}
-          <div className="pointer-events-none absolute right-0 top-0 z-10 hidden h-full w-4 bg-linear-to-l from-background to-transparent md:block" />
+        {/* RIGHT FADE */}
+        <div className="pointer-events-none absolute right-0 top-0 z-10 hidden h-full w-4 bg-linear-to-l from-background to-transparent md:block" />
 
-          <div className="flex flex-col md:flex-row gap-5 md:mt-8 md:px-4">
-            <TimeOfDaySection
-              title="Morning"
-              subtitle="5 AM - 12 PM"
-              friends={morning}
-            />
-            <TimeOfDaySection
-              title="Afternoon"
-              subtitle="12 PM - 6 PM"
-              friends={afternoon}
-            />
-            <TimeOfDaySection
-              title="Evening"
-              subtitle="6 PM - 11 PM"
-              friends={evening}
-            />
-            <TimeOfDaySection
-              title="Night"
-              subtitle="11 PM - 5 AM"
-              friends={night}
-            />
-          </div>
-          <ScrollBar
-            orientation="horizontal"
-            className="absolute top-0 left-0 w-full -scale-y-100"
+        <div className="flex flex-col md:flex-row gap-5 md:mt-8 md:px-4">
+          <TimeOfDaySection
+            title="Morning"
+            subtitle={
+              friendStore.show24HourClock ? `05:00 - 12:00` : `5 AM - 12 PM`
+            }
+            friends={morning}
           />
-        </ScrollArea>
+          <TimeOfDaySection
+            title="Afternoon"
+            subtitle={
+              friendStore.show24HourClock ? `12:00 - 18:00` : `12 PM - 6 PM`
+            }
+            friends={afternoon}
+          />
+          <TimeOfDaySection
+            title="Evening"
+            subtitle={
+              friendStore.show24HourClock ? `18:00 - 23:00` : `6 PM - 11 PM`
+            }
+            friends={evening}
+          />
+          <TimeOfDaySection
+            title="Night"
+            subtitle={
+              friendStore.show24HourClock ? `23:00 - 05:00` : `11 PM - 5 AM`
+            }
+            friends={night}
+          />
+        </div>
       </TabsContent>
 
       {/* ✅ REGION TAB */}
