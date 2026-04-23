@@ -18,6 +18,9 @@ class FriendStore {
   showFavoritesOnly = false;
   showDetailedView = false;
   show24HourClock = false;
+  timeTick = Date.now();
+  private intervalId: number | null = null;
+  private timeoutId: number | null = null;
 
   private SEED_DATA: Friend[] = [
     // {
@@ -109,6 +112,30 @@ class FriendStore {
     this.show24HourClock = settings.show24HourClock ?? false;
 
     this.isLoaded = true;
+    this.startClockTimer();
+  }
+
+  private startClockTimer() {
+    if (this.intervalId !== null || this.timeoutId !== null) return;
+    if (typeof window === "undefined") return;
+
+    this.timeTick = Date.now();
+
+    const scheduleMinuteTick = () => {
+      this.timeTick = Date.now();
+      this.intervalId = window.setInterval(() => {
+        this.timeTick = Date.now();
+      }, 60000);
+    };
+
+    const now = new Date();
+    const msUntilNextMinute =
+      60000 - (now.getSeconds() * 1000 + now.getMilliseconds());
+
+    this.timeoutId = window.setTimeout(() => {
+      this.timeoutId = null;
+      scheduleMinuteTick();
+    }, msUntilNextMinute);
   }
 
   private persistFriends() {
@@ -176,6 +203,8 @@ class FriendStore {
 
   /** Enriched friends with calculated time data */
   get enrichedFriends(): Friend[] {
+    this.timeTick;
+
     const baseFriends = this.showFavoritesOnly
       ? this.friends.filter((f) => f.isFavorite)
       : this.friends;
@@ -198,6 +227,8 @@ class FriendStore {
 
   /** Enriched friends (always uses all stored friends) */
   get enrichedAllFriends(): Friend[] {
+    this.timeTick;
+
     return this.friends
       .map((friend) => ({
         ...friend,
