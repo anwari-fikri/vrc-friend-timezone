@@ -49,7 +49,7 @@ export function getTimezoneUtc(timezone: string): number {
 }
 
 export const getTimeOfDay = (
-  hour: number
+  hour: number,
 ): "morning" | "afternoon" | "evening" | "night" => {
   if (hour >= 5 && hour < 12) return "morning";
   if (hour >= 12 && hour < 18) return "afternoon";
