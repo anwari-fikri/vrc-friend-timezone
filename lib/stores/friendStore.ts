@@ -203,8 +203,6 @@ class FriendStore {
 
   /** Enriched friends with calculated time data */
   get enrichedFriends(): Friend[] {
-    this.timeTick;
-
     const baseFriends = this.showFavoritesOnly
       ? this.friends.filter((f) => f.isFavorite)
       : this.friends;
@@ -227,8 +225,6 @@ class FriendStore {
 
   /** Enriched friends (always uses all stored friends) */
   get enrichedAllFriends(): Friend[] {
-    this.timeTick;
-
     return this.friends
       .map((friend) => ({
         ...friend,
