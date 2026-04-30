@@ -78,12 +78,26 @@ export const TimezoneSelector = React.forwardRef<
 >(function TimezoneSelector({ id, value: propValue, onChange }, ref) {
   const [value, setValue] = React.useState(propValue || "");
   const [open, setOpen] = React.useState(false);
+  const commandListRef = React.useRef<HTMLDivElement>(null);
+  const [search, setSearch] = React.useState("");
+  const listRef = React.useRef<HTMLDivElement>(null);
+
+  React.useEffect(() => {
+    if (listRef.current) listRef.current.scrollTop = 0;
+  }, [search]);
 
   const handleValueChange = (newValue: string) => {
     setValue(newValue);
     onChange?.(newValue);
   };
   const internalRef = React.useRef<HTMLInputElement>(null);
+
+  const handleSearchChange = () => {
+    // Reset scroll position to top when user types
+    if (commandListRef.current) {
+      commandListRef.current.scrollTop = 0;
+    }
+  };
 
   React.useImperativeHandle(
     ref,
@@ -128,11 +142,14 @@ export const TimezoneSelector = React.forwardRef<
         <PopoverContent className="p-0 overflow-hidden">
           <Command>
             <CommandInput
-              placeholder="Search by city, UTC, or region…"
+              placeholder="Search by country, UTC, or region…"
               className="h-9"
+              value={search}
+              onValueChange={setSearch}
             />
 
             <CommandList
+              ref={listRef}
               id={`${id}-listbox`}
               role="listbox"
               className="max-h-75 overflow-y-auto"
@@ -153,7 +170,7 @@ export const TimezoneSelector = React.forwardRef<
                     <div className="flex flex-col min-w-0 flex-1">
                       <span className="truncate">{framework.label}</span>
                       <span className="text-xs text-muted-foreground truncate">
-                        {framework.offset} · {framework.value}
+                        {framework.offset} · {framework.value.replace("_", " ")}
                       </span>
                     </div>
 
